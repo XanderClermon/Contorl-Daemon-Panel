@@ -48,3 +48,38 @@ async def get_netpanel_tab(request: Request):
         request=request,
         name="partials/net_panel.html"
     )
+
+
+@router.get("/devices/list", response_class=HTMLResponse)
+async def get_devices_list(request: Request):
+    """
+    Получает список устройств из Redis.
+    Предположим, наш Демон пишет их в HSET 'detected_devices'
+    """
+    # Заглушка данных (позже заменим на реальный r.hgetall)
+    # Формат: { "IP": "MAC | DNS | Last Seen" }
+    devices_raw = r.hgetall("detected_devices")
+
+    devices = []
+    for ip, info in devices_raw.items():
+        # Допустим, инфо хранится строкой через разделитель
+        parts = info.split(" | ")
+        devices.append({
+            "ip": ip,
+            "mac": parts[0] if len(parts) > 0 else "??",
+            "name": parts[1] if len(parts) > 1 else "Unknown",
+            "status": "Online"
+        })
+
+    # Если устройств нет, вернем тестовую запись для проверки верстки
+    if not devices:
+        devices = [
+            {"ip": "192.168.1.1", "mac": "00:11:22:33:44:55", "name": "Main Router", "status": "Offline"},
+            {"ip": "192.168.1.15", "mac": "AA:BB:CC:DD:EE:FF", "name": "My Laptop", "status": "Online"},
+        ]
+
+    return templates.TemplateResponse(
+        request=request,
+        name="partials/devices_table.html",
+        context={"devices": devices}
+    )
