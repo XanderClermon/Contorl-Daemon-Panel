@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Control-Daemon-Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+</head>
+<body class="bg-gray-900 text-gray-100 font-sans min-h-screen">
+
+    <nav class="bg-gray-800 border-b border-gray-700 p-4">
+        <div class="container mx-auto flex space-x-8">
+            <h1 class="text-blue-500 font-bold mr-4">CDP v1.0</h1>
+
+            <button hx-get="/tab/main"
+                    hx-target="#tab-content"
+                    class="hover:text-blue-400 focus:text-blue-400 transition">
+                Главная
+            </button>
+            <button hx-get="/tab/netpanel"
+                    hx-target="#tab-content"
+                    class="hover:text-blue-400 focus:text-blue-400 transition">
+                NetPanel
+            </button>
+        </div>
+    </nav>
+
+    <main class="container mx-auto mt-10 p-8 bg-gray-800 rounded-3xl shadow-xl border border-gray-700">
+        <div id="tab-content" hx-get="/tab/main" hx-trigger="load">
+            <div class="flex justify-center p-10">
+                <span class="animate-pulse text-gray-500">Загрузка...</span>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
